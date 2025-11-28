@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: apps/backend
+        working-directory: app
 
     steps:
       - name: Checkout code
@@ -20,6 +20,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.3.4
+          working-directory: app
           bundler-cache: true
 
       - name: Scan for common Rails security vulnerabilities using static analysis
@@ -29,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: apps/backend
+        working-directory: app
 
     steps:
       - name: Checkout code
@@ -39,6 +40,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.3.4
+          working-directory: app
           bundler-cache: true
 
       - name: Lint code for consistent style
@@ -48,7 +50,10 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: apps/backend
+        working-directory: app
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/backend_test
 
     services:
       postgres:
@@ -73,11 +78,11 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.3.4
+          working-directory: app
           bundler-cache: true
 
+      - name: Prepare database
+        run: bin/rails db:prepare
+
       - name: Run tests
-        env:
-          RAILS_ENV: test
-          DATABASE_URL: postgres://postgres:postgres@localhost:5432
-          # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:test:prepare test
+        run: bin/rails test

@@ -7,6 +7,9 @@ on:
 jobs:
   system-tests:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
     services:
       postgres:
         image: postgres:16
@@ -27,9 +30,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.3
+          ruby-version: 3.3.4
+          working-directory: app
           bundler-cache: true
       - name: Setup database
-        run: cd apps/backend && bundle exec rails db:prepare
+        run: bundle exec rails db:prepare
       - name: Run system tests
-        run: cd apps/backend && bundle exec rails test:system
+        run: bundle exec rails test:system
