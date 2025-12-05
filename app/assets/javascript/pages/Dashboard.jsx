@@ -5,9 +5,11 @@ import api, {
   storeSessionId,
   storeSessionToken,
 } from "../lib/api";
+import { useTranslation } from "react-i18next";
 
 export default function Dashboard({ onLogout }) {
   const [user, setUser] = useState(null);
+  const { t } = useTranslation();
 
   // Example: check session on mount
   useEffect(() => {
@@ -36,26 +38,29 @@ export default function Dashboard({ onLogout }) {
     }
   };
 
+  const displayName = user?.email || t("dashboard.guest");
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto py-10">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Dashboard</h1>
+          <h1 className="text-3xl font-bold">
+            {t("dashboard.title")}
+          </h1>
           <button
             onClick={handleLogout}
             className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700"
           >
-            Logout
+            {t("dashboard.logout")}
           </button>
         </div>
 
         <div className="bg-white shadow rounded-lg p-6">
           <h2 className="text-xl font-semibold mb-4">
-            Welcome {user?.email || "Guest"} 🎉
+            {t("dashboard.welcomeWithUser", { user: displayName })}
           </h2>
           <p className="text-gray-600">
-            This is your dummy dashboard. Replace this with charts, tasks, or
-            any data from your Rails API.
+            {t("dashboard.description")}
           </p>
         </div>
       </div>
