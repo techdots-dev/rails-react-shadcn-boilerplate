@@ -48,6 +48,10 @@ group :development, :test do
   gem "factory_bot_rails"
 end
 
+group :test do
+  gem "capybara"
+end
+
 gem "redis", "~> 5.4"
 gem "rubocop-rspec", "~> 3.6"
 
