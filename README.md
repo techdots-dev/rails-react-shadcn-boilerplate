@@ -19,3 +19,18 @@ Run `npm run build` to output compiled assets to `app/assets/builds`. The Rails 
 ## Tests
 - Run all Rails tests: `bin/rails test`
 - Lint Ruby files: `bin/rubocop -f github`
+
+## What's RRSB?
+RRSB (Rails + React Starter Boilerplate) is a starter kit for building Rails 8 applications with a React single-page app front end. It pairs Rails for backend APIs and tooling with a modern React stack bundled by esbuild so you can get from idea to production quickly.
+
+## Contributing
+1. Fork the repository and create your branch from `main`.
+2. Make your changes, keeping formatting and tests in mind.
+3. Ensure tests and linters pass.
+4. Open a pull request describing the change and its motivation.
+
+## License
+This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+## About techdots
+techdots (https://techdots.dev) is a product and engineering studio that partners with teams to design, build, and scale modern web applications. We focus on pragmatic delivery, clean architecture, and long-term maintainability, providing end-to-end support from discovery and UX to implementation, infrastructure, and ongoing iteration.
