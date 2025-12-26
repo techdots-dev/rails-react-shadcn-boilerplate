@@ -9,7 +9,7 @@ class RegistrationsController < ApiController
       render json: @user, status: :created
       PostHog.capture({ distinct_id: @user.id, event: "user_signed_up" }) if defined?(PostHog)
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: @user.errors, status: :unprocessable_content
     end
   end
 
