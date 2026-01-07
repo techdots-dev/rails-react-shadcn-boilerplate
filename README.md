@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://techdots.dev">
+    <img src="public/66e82263582d7179b492b755_Logo.svg" alt="Project Logo" width="180" />
+  </a>
+</p>
+
 # Rails + React application
 
 This Rails 8 application renders the React SPA directly from Rails. The React source lives in `app/assets/javascript/` and is bundled with esbuild into `app/assets/builds`.
