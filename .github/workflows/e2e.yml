@@ -7,9 +7,6 @@ on:
 jobs:
   system-tests:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: app
     services:
       postgres:
         image: postgres:16
@@ -26,13 +23,21 @@ jobs:
     env:
       RAILS_ENV: test
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/backend_test
+      NODE_ENV: test
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.3.4
-          working-directory: app
           bundler-cache: true
+      - name: Install frontend dependencies
+        run: npm ci --legacy-peer-deps # temporary while React 19 and testing-library peer deps diverge
+      - name: Build assets
+        run: npm run build
       - name: Setup database
         run: bundle exec rails db:prepare
       - name: Run system tests

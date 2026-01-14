@@ -29,7 +29,7 @@ export default function Login({ onLogin }) {
       }
 
       const data = await response.json();
-      const token = response.headers.get("X-Session-Token");
+       const token = response.headers.get("X-Session-Token") || data.token;
 
       storeSessionId(data.id);
       storeSessionToken(token);
