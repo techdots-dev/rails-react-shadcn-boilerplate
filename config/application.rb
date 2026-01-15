@@ -40,5 +40,8 @@ module Backend
 
     # Serve the full Rails stack so we can render the React frontend alongside the API.
     config.api_only = false
+
+    config.i18n.default_locale = :en
+    config.i18n.available_locales = [ :en ]
   end
 end
