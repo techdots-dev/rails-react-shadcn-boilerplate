@@ -99,7 +99,13 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="*" element={<Navigate to="/" replace />} />
+
+        <Route
+          path="*"
+          element={
+            window.location.pathname.startsWith("/blog") ? <></> : <Navigate to="/" replace />
+          }
+        />
       </Routes>
     </Router>
   );
