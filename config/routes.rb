@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount Spina::Engine => "/blog"
+  
   defaults format: :json do
     post "sign_in", to: "sessions#create"
     post "sign_up", to: "registrations#create"
