@@ -1,10 +1,7 @@
-require "net/http"
-require "json"
+require "sendgrid-ruby"
 
 module EmailProviders
   class SendgridProvider < EmailProvider
-    SENDGRID_ENDPOINT = "https://api.sendgrid.com/v3/mail/send".freeze
-
     def initialize(api_key:)
       @api_key = api_key
     end
@@ -12,19 +9,16 @@ module EmailProviders
     def send_email(to:, subject:, html_body:, text_body: nil, from: nil, metadata: {})
       ensure_api_key!
 
-      payload = {
-        personalizations: [
-          {
-            to: Array(to).map { |email| { email: email } },
-            subject: subject,
-            custom_args: metadata
-          }
-        ],
-        from: { email: from || default_from },
-        content: build_content(html_body, text_body)
-      }
+      payload = build_payload(
+        to: to,
+        subject: subject,
+        html_body: html_body,
+        text_body: text_body,
+        from: from,
+        metadata: metadata
+      )
 
-      response = http_post(SENDGRID_ENDPOINT, payload)
+      response = client.client.mail._("send").post(request_body: payload)
       handle_response(response)
     end
 
@@ -35,6 +29,24 @@ module EmailProviders
         raise ArgumentError, "SendGrid API key is required"
       end
 
+      def client
+        @client ||= SendGrid::API.new(api_key: @api_key)
+      end
+
+      def build_payload(to:, subject:, html_body:, text_body:, from:, metadata:)
+        {
+          personalizations: [
+            {
+              to: Array(to).map { |email| { email: email } },
+              subject: subject,
+              custom_args: metadata.presence
+            }.compact
+          ],
+          from: { email: from || default_from },
+          content: build_content(html_body, text_body)
+        }
+      end
+
       def build_content(html_body, text_body)
         content = []
         content << { type: "text/plain", value: text_body } if text_body.present?
@@ -42,22 +54,10 @@ module EmailProviders
         content
       end
 
-      def http_post(url, payload)
-        uri = URI.parse(url)
-        request = Net::HTTP::Post.new(uri)
-        request["Authorization"] = "Bearer #{@api_key}"
-        request["Content-Type"] = "application/json"
-        request.body = payload.to_json
-
-        Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
-          http.request(request)
-        end
-      end
-
       def handle_response(response)
-        return response if response.code.to_i.between?(200, 299)
+        return response if response.status_code.to_i.between?(200, 299)
 
-        raise StandardError, "SendGrid error (status #{response.code}): #{response.body}"
+        raise StandardError, "SendGrid error (status #{response.status_code}): #{response.body}"
       end
   end
 end
