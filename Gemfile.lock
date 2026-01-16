@@ -270,6 +270,7 @@ GEM
     regexp_parser (2.11.3)
     reline (0.6.2)
       io-console (~> 0.5)
+    rollbar (3.7.0)
     rspec-core (3.13.5)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.5)
@@ -394,6 +395,7 @@ DEPENDENCIES
   rack-cors
   rails (~> 8.0.2)
   redis (~> 5.4)
+  rollbar
   rspec-rails
   rubocop-rails-omakase
   rubocop-rspec (~> 3.6)

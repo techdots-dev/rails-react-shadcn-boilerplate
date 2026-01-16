@@ -60,6 +60,7 @@ gem "rack-cors"
 
 # Analytics
 gem "posthog-ruby", require: false
+gem "rollbar"
 
 # Asset pipeline
 gem "propshaft", "~> 1.3"
