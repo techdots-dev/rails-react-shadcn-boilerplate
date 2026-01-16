@@ -9,9 +9,6 @@ on:
 jobs:
   scan_ruby:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: app
 
     steps:
       - name: Checkout code
@@ -20,7 +17,6 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.3.4
-          working-directory: app
           bundler-cache: true
 
       - name: Scan for common Rails security vulnerabilities using static analysis
@@ -28,9 +24,6 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: app
 
     steps:
       - name: Checkout code
@@ -40,7 +33,6 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.3.4
-          working-directory: app
           bundler-cache: true
 
       - name: Lint code for consistent style
@@ -48,12 +40,10 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: app
     env:
       RAILS_ENV: test
       DATABASE_URL: postgres://postgres:postgres@localhost:5432/backend_test
+      NODE_ENV: test
 
     services:
       postgres:
@@ -74,12 +64,22 @@ jobs:
         run: sudo apt-get update && sudo apt-get install --no-install-recommends -y build-essential git libpq-dev libyaml-dev pkg-config
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.3.4
-          working-directory: app
           bundler-cache: true
+
+      - name: Install frontend dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build assets
+        run: npm run build
 
       - name: Prepare database
         run: bin/rails db:prepare

@@ -15,16 +15,23 @@ class SessionsController < ApiController
     if user = User.authenticate_by(email: params[:email], password: params[:password])
       @session = user.sessions.create!
       response.set_header "X-Session-Token", @session.signed_id
+      cookies.signed[:session_token] = {
+        value: @session.signed_id,
+        httponly: true,
+        same_site: :lax,
+        secure: Rails.env.production?
+      }
 
-      render json: @session, status: :created
+      render json: @session.as_json.merge(token: @session.signed_id), status: :created
       PostHog.capture({ distinct_id: user.id, event: "user_logged_in" }) if defined?(PostHog)
     else
       render json: { error: "That email or password is incorrect" }, status: :unauthorized
     end
   end
 
-  def destroy
+ def destroy
     @session.destroy
+    cookies.delete(:session_token)
   end
 
   private
