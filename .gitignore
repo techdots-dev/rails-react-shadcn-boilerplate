@@ -10,6 +10,51 @@ node_modules/
 # Ignore all environment files.
 /.env*
 
+# Ignore IDE/editor project files.
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# Ignore OS/editor/tooling artifacts.
+.DS_Store
+.byebug_history
+.rspec_status
+.ruby-lsp/
+/.eslintcache
+/.stylelintcache
+/.sass-cache/
+/.pnp.*
+/coverage/
+/vendor/bundle/
+
+# Ignore Node/React package manager caches and logs.
+/.npm/
+/.yarn/
+/.pnpm-store/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tsbuildinfo
+.jest/
+
+# Ignore build/compile outputs.
+/app/assets/builds/*
+!/app/assets/builds/.keep
+/public/assets/*
+/public/packs/*
+/public/packs-test/*
+/public/builds/*
+/public/vite/*
+/dist/
+/build/
+/.parcel-cache/
+/.turbo/
+/.cache/
+*.map
+
 # Ignore all logfiles and tempfiles.
 /log/*
 /tmp/*
