@@ -22,6 +22,17 @@ This Rails 8 application renders the React SPA directly from Rails. The React so
 ## Building assets
 Run `npm run build` to output compiled assets to `app/assets/builds`. The Rails asset pipeline will serve them in production when `RAILS_SERVE_STATIC_FILES=1` is set.
 
+## Monitoring
+The app integrates Rollbar on both the Rails backend and the React client. The frontend reads its access
+token from the backend via `GET /rollbar`, so it should only be configured on the server side.
+
+Configure the following environment variables or Rails credentials:
+
+- `ROLLBAR_SERVER_ACCESS_TOKEN`: Server-side Rollbar access token for Rails error reporting.
+- `ROLLBAR_CLIENT_ACCESS_TOKEN`: Client-side Rollbar access token returned to the React app.
+- `ROLLBAR_ENVIRONMENT`: Rollbar environment name (defaults to `Rails.env`).
+- `ROLLBAR_CODE_VERSION`: Optional release identifier for source maps and deployments.
+
 ## Tests
 - Run all Rails tests: `bin/rails test`
 - Lint Ruby files: `bin/rubocop -f github`
