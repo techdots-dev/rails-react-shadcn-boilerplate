@@ -1,38 +1,17 @@
-import React, { useEffect, useState } from "react";
-import api, {
-  currentSessionId,
-  sessionHeaders,
-  storeSessionId,
-  storeSessionToken,
-} from "../lib/api";
+import React from "react";
+import api from "../lib/api";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
-export default function Dashboard({ onLogout }) {
-  const [user, setUser] = useState(null);
+export default function Dashboard({ onLogout, user }) {
   const { t } = useTranslation();
-
-  // Example: check session on mount
-  useEffect(() => {
-    api
-      .get("/sessions", { headers: sessionHeaders() })
-      .then((data) => setUser(data))
-      .catch(() => {
-        storeSessionToken(null);
-        storeSessionId(null);
-        onLogout?.();
-      });
-  }, []);
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      const sessionId = currentSessionId();
-      const endpoint = sessionId ? `/sessions/${sessionId}` : "/sessions/1";
-
-      await api.delete(endpoint, { headers: sessionHeaders() });
-      storeSessionToken(null);
-      storeSessionId(null);
+      await api.delete("/sign_out");
       onLogout?.();
-      window.location.href = "/login";
+      navigate("/login", { replace: true })
     } catch (err) {
       console.error("Logout failed", err);
     }

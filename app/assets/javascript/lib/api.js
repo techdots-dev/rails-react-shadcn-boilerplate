@@ -1,6 +1,3 @@
-export const SESSION_ID_KEY = "sessionId";
-export const SESSION_TOKEN_KEY = "sessionToken";
-
 function detectBaseURL() {
   const meta = document.querySelector('meta[name="api-base-url"]');
   return meta?.content || window.location.origin;
@@ -8,36 +5,10 @@ function detectBaseURL() {
 
 export const baseURL = detectBaseURL();
 
-export function storeSessionToken(token) {
-  if (token) {
-    localStorage.setItem(SESSION_TOKEN_KEY, token);
-  } else {
-    localStorage.removeItem(SESSION_TOKEN_KEY);
-  }
-}
-
-export function storeSessionId(id) {
-  if (id) {
-    localStorage.setItem(SESSION_ID_KEY, String(id));
-  } else {
-    localStorage.removeItem(SESSION_ID_KEY);
-  }
-}
-
-export function currentSessionId() {
-  return localStorage.getItem(SESSION_ID_KEY);
-}
-
-export function sessionHeaders() {
-  const token = localStorage.getItem(SESSION_TOKEN_KEY);
-  return token ? { Authorization: `Token token=${token}` } : {};
-}
-
 async function request(path, options = {}) {
   const response = await fetch(`${baseURL}${path}`, {
     credentials: "include",
     headers: {
-      ...sessionHeaders(),
       ...(options.headers || {}),
     },
     ...options,
