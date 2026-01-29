@@ -14,6 +14,7 @@ class SessionsController < ApiController
   def create
     if user = User.authenticate_by(email: params[:email], password: params[:password])
       @session = user.sessions.create!
+      response.set_header("X-Session-Token", @session.signed_id)
       cookies.signed[:session_token] = {
         value: @session.signed_id,
         httponly: true,
