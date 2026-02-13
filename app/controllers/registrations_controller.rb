@@ -6,7 +6,7 @@ class RegistrationsController < ApiController
 
     if @user.save
       send_email_verification
-      render json: @user, status: :created
+      render json: @user.as_json(only: %i[ id email verified ]), status: :created
       PostHog.capture({ distinct_id: @user.id, event: "user_signed_up" }) if defined?(PostHog)
     else
       render json: @user.errors, status: :unprocessable_entity
