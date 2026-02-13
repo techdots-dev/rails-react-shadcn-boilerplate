@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     post "sign_up", to: "registrations#create"
     delete "sign_out", to: "sessions#destroy_current"
     get "current_user", to: "current_user#show"
+    get "rollbar", to: "rollbar#show"
     resources :sessions, only: [ :index, :show, :destroy ]
     resource  :password, only: [ :edit, :update ]
 
