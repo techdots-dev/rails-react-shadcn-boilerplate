@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    root to: "users#index"
+    resources :sessions
+    resources :users
+  end
+
   defaults format: :json do
     post "sign_in", to: "sessions#create"
     post "sign_up", to: "registrations#create"

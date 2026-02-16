@@ -22,7 +22,7 @@ class SessionsController < ApiController
         secure: Rails.env.production?
       }
 
-      render_user(user, status: :created)
+      render_user(user, status: :ok)
       PostHog.capture({ distinct_id: user.id, event: "user_logged_in" }) if defined?(PostHog)
     else
       render json: { error: "That email or password is incorrect" }, status: :unauthorized

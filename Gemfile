@@ -56,6 +56,7 @@ gem "redis", "~> 5.4"
 gem "rubocop-rspec", "~> 3.6"
 
 gem "authentication-zero", "~> 4.0"
+gem "administrate", "~> 1.0"
 gem "rack-cors"
 gem "sendgrid-ruby"
 
