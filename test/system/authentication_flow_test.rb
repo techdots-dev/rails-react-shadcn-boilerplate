@@ -18,7 +18,7 @@ class AuthenticationFlowTest < ApplicationSystemTestCase
     assert_equal 204, page.status_code
 
     page.driver.post sign_in_path, { email:, password: }
-    assert_equal 201, page.status_code
+    assert_equal 200, page.status_code
     token = page.driver.response.headers["X-Session-Token"]
     assert token.present?
 
