@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { storeSessionId, storeSessionToken } from "../lib/api";
 import AuthLayout from "../layouts/AuthLayout";
+import { useNavigate } from "react-router-dom";
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState("");
@@ -8,6 +8,7 @@ export default function Login({ onLogin }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,13 +30,9 @@ export default function Login({ onLogin }) {
       }
 
       const data = await response.json();
-       const token = response.headers.get("X-Session-Token") || data.token;
-
-      storeSessionId(data.id);
-      storeSessionToken(token);
       setSuccess("Login successful!");
-      onLogin?.();
-      window.location.href = "/dashboard";
+      onLogin?.(data);
+      navigate("/dashboard", { replace: true });
 
       console.log("Logged in user:", data);
     } catch (err) {

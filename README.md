@@ -19,8 +19,32 @@ This Rails 8 application renders the React SPA directly from Rails. The React so
 - If you prefer to run esbuild yourself, start `npm run dev -- --watch` in one shell and `bin/rails server` in another.
 - Built assets live in `app/assets/builds` and are served through the Rails asset pipeline. Delete the folder if you want a clean rebuild.
 
+## Running locally
+After setup, run `bin/dev` and visit `http://localhost:3000`. The Rails server serves the React SPA and API from the same origin.
+
+## Local auth flow (cookie-based)
+This app uses Rails signed, httpOnly cookies for session authentication (no JWTs and no localStorage tokens).
+
+- `POST /sign_up` creates a user and returns `{id,email,verified}`.
+- `POST /sign_in` sets a signed `session_token` cookie and returns `{id,email,verified}`.
+- `GET /current_user` returns `{id,email,verified}` for an authenticated request, otherwise `401`.
+- `DELETE /sign_out` clears the cookie and removes the current session (returns `204`).
+
+Frontend requests send cookies by default via `credentials: "include"` in the API wrapper. Use `GET /current_user` to check authentication state.
+
 ## Building assets
 Run `npm run build` to output compiled assets to `app/assets/builds`. The Rails asset pipeline will serve them in production when `RAILS_SERVE_STATIC_FILES=1` is set.
+
+## Monitoring
+The app integrates Rollbar on both the Rails backend and the React client. The frontend reads its access
+token from the backend via `GET /rollbar`, so it should only be configured on the server side.
+
+Configure the following environment variables or Rails credentials:
+
+- `ROLLBAR_SERVER_ACCESS_TOKEN`: Server-side Rollbar access token for Rails error reporting.
+- `ROLLBAR_CLIENT_ACCESS_TOKEN`: Client-side Rollbar access token returned to the React app.
+- `ROLLBAR_ENVIRONMENT`: Rollbar environment name (defaults to `Rails.env`).
+- `ROLLBAR_CODE_VERSION`: Optional release identifier for source maps and deployments.
 
 ## Tests
 - Run all Rails tests: `bin/rails test`

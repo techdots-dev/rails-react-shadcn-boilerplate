@@ -61,9 +61,11 @@ gem "rubocop-rspec", "~> 3.6"
 
 gem "authentication-zero", "~> 4.0"
 gem "rack-cors"
+gem "sendgrid-ruby"
 
 # Analytics
 gem "posthog-ruby", require: false
+gem "rollbar"
 
 # Asset pipeline
 gem "propshaft", "~> 1.3"

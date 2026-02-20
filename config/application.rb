@@ -42,5 +42,14 @@ module Backend
 
     # Serve the full Rails stack so we can render the React frontend alongside the API.
     config.api_only = false
+
+    config.autoload_paths << Rails.root.join("app/services")
+    config.eager_load_paths << Rails.root.join("app/services")
+
+    config.email_provider = ENV.fetch("EMAIL_PROVIDER", "sendgrid")
+    config.email_default_from = ENV.fetch("EMAIL_DEFAULT_FROM", "from@example.com")
+    config.sendgrid_api_key = ENV["SENDGRID_API_KEY"]
+    config.i18n.default_locale = :en
+    config.i18n.available_locales = [ :en ]
   end
 end

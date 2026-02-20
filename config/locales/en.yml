@@ -28,4 +28,11 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  app:
+    title: "My App"
+    navbar:
+      home: "Home"
+      profile: "Profile"
+    messages:
+      welcome: "Welcome back!"
+      logged_out: "You have been logged out."
