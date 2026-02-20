@@ -22,6 +22,28 @@ This Rails 8 application renders the React SPA directly from Rails. The React so
 ## Running locally
 After setup, run `bin/dev` and visit `http://localhost:3000`. The Rails server serves the React SPA and API from the same origin.
 
+## Docker setup
+The project includes environment-specific Docker Compose files and shared Docker assets:
+
+- `docker/base/`: shared Dockerfile + entrypoint used by all environments.
+- `docker/environment/development|staging|production/`: virtual host service config (Caddy).
+- `docker-compose.yml`: development stack (required default filename).
+- `docker-compose.stage.yml`: staging stack.
+- `docker-compose.production.yml`: production stack.
+
+Each stack includes the following services:
+
+- `web`: Rails app
+- `worker`: Solid Queue worker (`bin/jobs`)
+- `database`: PostgreSQL
+- `redis`: Redis
+- `virtual_host`: Caddy reverse proxy for web traffic
+
+### Start each environment
+- Development: `docker compose up --build`
+- Staging: `docker compose -f docker-compose.stage.yml up --build`
+- Production: `docker compose -f docker-compose.production.yml up --build`
+
 ## Local auth flow (cookie-based)
 This app uses Rails signed, httpOnly cookies for session authentication (no JWTs and no localStorage tokens).
 
