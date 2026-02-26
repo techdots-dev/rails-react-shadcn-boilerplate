@@ -30,8 +30,14 @@ export default function Login({ onLogin }) {
       }
 
       const data = await response.json();
+      console.log(data);
       setSuccess("Login successful!");
       onLogin?.(data);
+      if (data.admin) {
+        window.location.replace("/admin");
+        return;
+      }
+
       navigate("/dashboard", { replace: true });
 
       console.log("Logged in user:", data);

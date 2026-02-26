@@ -16,7 +16,7 @@ class ApiController < ActionController::API
     end
 
     def render_user(user, status: :ok)
-      render json: user.as_json(only: %i[ id email verified ]), status: status
+      render json: user.as_json(only: %i[ id email verified admin ]), status: status
     end
 
     def set_current_request_details
