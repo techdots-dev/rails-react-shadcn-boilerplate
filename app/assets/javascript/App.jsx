@@ -136,6 +136,12 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="*"
+        element={
+          window.location.pathname.startsWith("/blog") ? <></> : <Navigate to="/" replace />
+        }
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

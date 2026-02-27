@@ -64,3 +64,36 @@ This project is licensed under the MIT License. See the `LICENSE` file for detai
 
 ## About techdots
 techdots (https://techdots.dev) is a product and engineering studio that partners with teams to design, build, and scale modern web applications. We focus on pragmatic delivery, clean architecture, and long-term maintainability, providing end-to-end support from discovery and UX to implementation, infrastructure, and ongoing iteration.
+
+## Spina CMS
+
+This application integrates Spina CMS for content management.
+
+Spina provides an admin interface for managing pages, structured content blocks, rich text, and media uploads without modifying application code.
+
+Admin panel:
+
+http://localhost:3000/admin
+
+Theme Configuration
+
+Spina content structure is defined in:
+
+config/initializers/themes/
+
+
+Themes define available page templates and content parts (text, images, etc.).
+Restart the server after modifying theme files.
+
+Active Storage
+
+Spina uses Active Storage for file uploads.
+Ensure storage is configured in:
+
+config/storage.yml
+
+
+If setting up manually:
+
+bin/rails active_storage:install
+bin/rails db:migrate
