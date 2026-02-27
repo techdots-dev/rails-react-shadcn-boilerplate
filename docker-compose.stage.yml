@@ -8,8 +8,8 @@ services:
       RAILS_ENV: staging
       RAILS_LOG_TO_STDOUT: "1"
       RAILS_SERVE_STATIC_FILES: "1"
-      BACKEND_DATABASE_PASSWORD: postgres
-      DATABASE_URL: postgres://backend:postgres@database:5432/backend_staging
+      BACKEND_DATABASE_PASSWORD: ${BACKEND_DATABASE_PASSWORD:?set BACKEND_DATABASE_PASSWORD}
+      DATABASE_URL: postgres://backend:${BACKEND_DATABASE_PASSWORD:?set BACKEND_DATABASE_PASSWORD}@database:5432/backend_staging
       REDIS_URL: redis://redis:6379/0
     depends_on:
       - database
@@ -22,8 +22,8 @@ services:
     command: ruby bin/jobs
     environment:
       RAILS_ENV: staging
-      BACKEND_DATABASE_PASSWORD: postgres
-      DATABASE_URL: postgres://backend:postgres@database:5432/backend_staging
+      BACKEND_DATABASE_PASSWORD: ${BACKEND_DATABASE_PASSWORD:?set BACKEND_DATABASE_PASSWORD}
+      DATABASE_URL: postgres://backend:${BACKEND_DATABASE_PASSWORD:?set BACKEND_DATABASE_PASSWORD}@database:5432/backend_staging
       REDIS_URL: redis://redis:6379/0
     depends_on:
       - database
@@ -33,7 +33,7 @@ services:
     image: postgres:16
     environment:
       POSTGRES_USER: backend
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: ${BACKEND_DATABASE_PASSWORD:?set BACKEND_DATABASE_PASSWORD}
       POSTGRES_DB: backend_staging
     volumes:
       - stage_postgres_data:/var/lib/postgresql/data
@@ -49,7 +49,7 @@ services:
     depends_on:
       - web
     ports:
-      - "8080:80"
+      - "80:80"
     volumes:
       - ./docker/environment/staging/Caddyfile:/etc/caddy/Caddyfile:ro
 

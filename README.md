@@ -41,8 +41,10 @@ Each stack includes the following services:
 
 ### Start each environment
 - Development: `docker compose up --build`
-- Staging: `docker compose -f docker-compose.stage.yml up --build`
-- Production: `docker compose -f docker-compose.production.yml up --build`
+- Staging: `BACKEND_DATABASE_PASSWORD=your_password docker compose -f docker-compose.stage.yml up --build`
+- Production: `BACKEND_DATABASE_PASSWORD=your_password docker compose -f docker-compose.production.yml up --build`
+
+For staging and production compose files, `BACKEND_DATABASE_PASSWORD` is required and is read from the environment (rather than hard-coded in compose).
 
 ## Local auth flow (cookie-based)
 This app uses Rails signed, httpOnly cookies for session authentication (no JWTs and no localStorage tokens).
