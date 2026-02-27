@@ -1,4 +1,11 @@
 Rails.application.routes.draw do
+  namespace :admin do
+    root to: "users#index"
+    delete "logout", to: "sessions#destroy_current"
+    resources :sessions
+    resources :users
+  end
+
   defaults format: :json do
     post "sign_in", to: "sessions#create"
     post "sign_up", to: "registrations#create"

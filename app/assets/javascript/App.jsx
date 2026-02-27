@@ -18,9 +18,25 @@ function ProtectedRoute({ isAuthenticated, children }) {
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 }
 
-function GuestRoute({ isAuthenticated, children }) {
+function DefaultSignedInRedirect({ currentUser }) {
+  useEffect(() => {
+    if (currentUser?.admin) {
+      window.location.replace("/admin");
+    }
+  }, [currentUser]);
+
+  if (currentUser?.admin) return null;
+
+  return <Navigate to="/dashboard" replace />;
+}
+
+function GuestRoute({ isAuthenticated, currentUser, children }) {
   if (isAuthenticated === null) return null;
-  return isAuthenticated ? <Navigate to="/dashboard" replace /> : children;
+  return isAuthenticated ? (
+    <DefaultSignedInRedirect currentUser={currentUser} />
+  ) : (
+    children
+  );
 }
 
 const guestPaths = new Set([
@@ -87,13 +103,20 @@ function AppRoutes() {
       <Route
         path="/"
         element={
-          <Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />
+          isAuthenticated ? (
+            <DefaultSignedInRedirect currentUser={currentUser} />
+          ) : (
+            <Navigate to="/login" replace />
+          )
         }
       />
       <Route
         path="/login"
         element={
-          <GuestRoute isAuthenticated={isAuthenticated}>
+          <GuestRoute
+            isAuthenticated={isAuthenticated}
+            currentUser={currentUser}
+          >
             <Login onLogin={handleLogin} />
           </GuestRoute>
         }
@@ -101,7 +124,10 @@ function AppRoutes() {
       <Route
         path="/sign_in"
         element={
-          <GuestRoute isAuthenticated={isAuthenticated}>
+          <GuestRoute
+            isAuthenticated={isAuthenticated}
+            currentUser={currentUser}
+          >
             <Login onLogin={handleLogin} />
           </GuestRoute>
         }
@@ -109,7 +135,10 @@ function AppRoutes() {
       <Route
         path="/signup"
         element={
-          <GuestRoute isAuthenticated={isAuthenticated}>
+          <GuestRoute
+            isAuthenticated={isAuthenticated}
+            currentUser={currentUser}
+          >
             <Signup />
           </GuestRoute>
         }
@@ -117,7 +146,10 @@ function AppRoutes() {
       <Route
         path="/forgot-password"
         element={
-          <GuestRoute isAuthenticated={isAuthenticated}>
+          <GuestRoute
+            isAuthenticated={isAuthenticated}
+            currentUser={currentUser}
+          >
             <ForgotPassword />
           </GuestRoute>
         }
@@ -126,13 +158,17 @@ function AppRoutes() {
         path="/dashboard"
         element={
           <ProtectedRoute isAuthenticated={isAuthenticated}>
-            <Dashboard
-              user={currentUser}
-              onLogout={() => {
-                setCurrentUser(null);
-                setIsAuthenticated(false);
-              }}
-            />
+            {currentUser?.admin ? (
+              <DefaultSignedInRedirect currentUser={currentUser} />
+            ) : (
+              <Dashboard
+                user={currentUser}
+                onLogout={() => {
+                  setCurrentUser(null);
+                  setIsAuthenticated(false);
+                }}
+              />
+            )}
           </ProtectedRoute>
         }
       />

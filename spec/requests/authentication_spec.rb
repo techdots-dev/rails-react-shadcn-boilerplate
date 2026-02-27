@@ -3,18 +3,19 @@ require "rails_helper"
 RSpec.describe "Authentication", type: :request do
   describe "POST /sign_up" do
     it "creates a user and returns the expected payload" do
-      post "/sign_up", params: {
-        email: "newuser@example.com",
-        password: "passwordpassword",
-        password_confirmation: "passwordpassword"
-      }
+      expect {
+        post "/sign_up", params: {
+          email: "newuser@example.com",
+          password: "passwordpassword",
+          password_confirmation: "passwordpassword"
+        }
+      }.to change(User, :count).by(1)
 
       expect(response).to have_http_status(:created)
 
       body = JSON.parse(response.body)
       expect(body.keys).to contain_exactly("id", "email", "verified")
       expect(body["email"]).to eq("newuser@example.com")
-      expect(User.count).to eq(1)
     end
   end
 
@@ -24,7 +25,7 @@ RSpec.describe "Authentication", type: :request do
     it "sets a signed cookie and returns user data" do
       post "/sign_in", params: { email: user.email, password: "passwordpassword" }
 
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(:created)
       expect(response.headers["Set-Cookie"]).to include("session_token=")
 
       body = JSON.parse(response.body)

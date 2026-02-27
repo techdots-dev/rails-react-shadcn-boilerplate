@@ -13,3 +13,13 @@ FactoryBot.reload
 
 users_to_create = 50 - User.count
 FactoryBot.create_list(:user, users_to_create) if users_to_create.positive?
+
+admin_email = ENV.fetch("ADMIN_EMAIL", "admin@example.com")
+admin_password = ENV.fetch("ADMIN_PASSWORD", "passwordpassword")
+
+admin_user = User.find_or_initialize_by(email: admin_email)
+admin_user.password = admin_password if admin_user.new_record?
+admin_user.password_confirmation = admin_password if admin_user.new_record?
+admin_user.verified = true
+admin_user.admin = true
+admin_user.save!

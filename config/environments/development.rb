@@ -28,7 +28,7 @@ Rails.application.configure do
 
   Rails.application.config.session_store :cookie_store,
     key: "_app_session",
-    same_site: :none,
+    same_site: :lax,
     secure: Rails.env.production?
   # Change to :null_store to avoid any caching.
   config.cache_store = :memory_store
