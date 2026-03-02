@@ -49,5 +49,9 @@ module Backend
     config.sendgrid_api_key = ENV["SENDGRID_API_KEY"]
     config.i18n.default_locale = :en
     config.i18n.available_locales = [ :en ]
+
+    tenant_boolean = ActiveModel::Type::Boolean.new
+    config.x.tenancy.enabled = tenant_boolean.cast(ENV.fetch("ACTS_AS_TENANT_ENABLED", "false"))
+    config.x.tenancy.require_tenant = tenant_boolean.cast(ENV.fetch("ACTS_AS_TENANT_REQUIRE_TENANT", "false"))
   end
 end
