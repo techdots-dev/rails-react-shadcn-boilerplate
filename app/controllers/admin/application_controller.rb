@@ -13,7 +13,10 @@ module Admin
       def current_admin_user
         return @current_admin_user if defined?(@current_admin_user)
 
-        session_record = Session.find_signed(cookies.signed[:session_token]) if cookies.signed[:session_token].present?
+        session_record = if cookies.signed[:session_token].present?
+          Tenanting.without_tenant { Session.find_signed(cookies.signed[:session_token]) }
+        end
+        Tenanting.set_current_tenant(session_record&.user)
         @current_admin_user = session_record&.user
       end
   end
