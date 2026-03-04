@@ -47,6 +47,10 @@ module Backend
     config.email_provider = ENV.fetch("EMAIL_PROVIDER", "sendgrid")
     config.email_default_from = ENV.fetch("EMAIL_DEFAULT_FROM", "from@example.com")
     config.sendgrid_api_key = ENV["SENDGRID_API_KEY"]
+    config.payment_provider = ENV.fetch("PAYMENT_PROVIDER", "paysimple")
+    config.paysimple_base_url = ENV.fetch("PAYSIMPLE_BASE_URL", "https://api.paysimple.com")
+    config.paysimple_username = ENV["PAYSIMPLE_USERNAME"]
+    config.paysimple_api_key = ENV["PAYSIMPLE_API_KEY"]
     config.i18n.default_locale = :en
     config.i18n.available_locales = [ :en ]
   end
