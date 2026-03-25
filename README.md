@@ -56,6 +56,14 @@ This app uses Rails signed, httpOnly cookies for session authentication (no JWTs
 
 Frontend requests send cookies by default via `credentials: "include"` in the API wrapper. Use `GET /current_user` to check authentication state.
 
+## Multi-tenancy (acts_as_tenant)
+The app includes `acts_as_tenant` and can be enabled or disabled through environment variables.
+
+- `ACTS_AS_TENANT_ENABLED`: Enables tenant scoping when `true`. Default: `false`.
+- `ACTS_AS_TENANT_REQUIRE_TENANT`: Raises when tenant-scoped queries run without a tenant when `true`. Default: `false`.
+
+Current configuration scopes `Session` records by `User` when enabled.
+
 ## Building assets
 Run `npm run build` to output compiled assets to `app/assets/builds`. The Rails asset pipeline will serve them in production when `RAILS_SERVE_STATIC_FILES=1` is set.
 

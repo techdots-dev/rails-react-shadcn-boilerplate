@@ -41,10 +41,14 @@ class SessionsController < ApiController
   end
 
   def destroy_current
-    session_record = Session.find_signed(cookies.signed[:session_token]) if cookies.signed[:session_token].present?
+    session_record = if cookies.signed[:session_token].present?
+      Tenanting.without_tenant { Session.find_signed(cookies.signed[:session_token]) }
+    end
     Current.session = session_record
+    Tenanting.set_current_tenant(session_record&.user)
     session_record&.destroy
     Current.session = nil
+    Tenanting.clear_current_tenant
     cookies.delete(:session_token)
     head :no_content
   end
