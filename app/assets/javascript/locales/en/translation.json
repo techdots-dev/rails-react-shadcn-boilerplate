@@ -1,0 +1,20 @@
+{
+  "app": {
+    "title": "My App",
+    "navbar": {
+      "dashboard": "Dashboard",
+      "login": "Login"
+    },
+    "messages": {
+      "welcome": "Welcome back!",
+      "loginIntro": "Sign in to continue."
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "logout": "Logout",
+    "welcomeWithUser": "Welcome {{user}} 🎉",
+    "guest": "Guest",
+    "description": "This is your dummy dashboard. Replace this with charts, tasks, or any data from your Rails API."
+  }
+}

@@ -1,0 +1,44 @@
+name: E2E Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  system-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/backend_test
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: npm
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3.4
+          bundler-cache: true
+      - name: Install frontend dependencies
+        run: npm ci --legacy-peer-deps # temporary while React 19 and testing-library peer deps diverge
+      - name: Build assets
+        run: npm run build
+      - name: Setup database
+        run: bundle exec rails db:prepare
+      - name: Run system tests
+        run: bundle exec rails test:system

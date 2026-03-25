@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT_DIR"
+
+if ! command -v npm >/dev/null 2>&1; then
+  echo "npm is required to start esbuild." >&2
+  exit 1
+fi
+
+if [ ! -d "${ROOT_DIR}/node_modules" ]; then
+  echo "Installing Node dependencies..."
+  npm install
+fi
+
+echo "Starting esbuild in watch mode..."
+npm run dev -- --watch &
+ESBUILD_PID=$!
+
+echo "Starting Rails server..."
+"${ROOT_DIR}/bin/rails" server "$@" &
+RAILS_PID=$!
+
+pids=(${ESBUILD_PID} ${RAILS_PID})
+
+cleanup() {
+  for pid in "${pids[@]}"; do
+    if kill -0 "$pid" >/dev/null 2>&1; then
+      kill "$pid" >/dev/null 2>&1 || true
+    fi
+  done
+}
+
+trap cleanup EXIT INT TERM
+
+wait "$RAILS_PID"
+exit_code=$?
+
+cleanup
+exit "$exit_code"

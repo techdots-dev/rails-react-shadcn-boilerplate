@@ -1,0 +1,87 @@
+
+# config/brakeman.yml
+---
+# Path to your Rails app (root)
+:app_path: "."
+
+# Run all default + optional checks (equivalent to `brakeman -A`)
+:run_all_checks: true
+
+# Confidence level: 0 (high only), 1 (high+medium), 2 (high+medium+weak)
+:min_confidence: 2
+
+# Exit with non-zero status if warnings or errors are found
+:exit_on_warn: true
+:exit_on_error: true
+
+# Don’t be noisy, but still show progress
+:quiet: false
+:report_progress: true
+
+# Parallelize checks (default true)
+:parallel_checks: true
+
+# Use a pager? (we disable so CI logs are clean)
+:pager: false
+
+# Where to find/report things
+:ignore_file: "config/brakeman.ignore"   # optional; only used if file exists
+:show_ignored: false
+
+# Files/directories to skip entirely (adjust as you like)
+:skip_files:
+  - "test/"
+  - "spec/"
+  - "node_modules/"
+  - "tmp/"
+
+# Don’t run against vendored gems
+:skip_vendor: true
+
+# Do NOT filter checks – this keeps *all* checks turned on
+:skip_checks: []
+:run_checks: []
+:enable_checks: []
+
+# Extra check / lib / engine paths (leave empty unless you add custom checks)
+:additional_checks_path: []
+:additional_libs_path: []
+:engine_paths:
+  - "engines/*"
+
+# Analysis behaviour flags
+:assume_all_routes: true          # treat all controller methods as actions
+:check_arguments: true            # inspect method arguments for tainted data
+:ignore_model_output: false
+:ignore_redirect_to_model: true
+:index_libs: true
+:collapse_mass_assignment: false
+:combine_locations: true
+:highlight_user_input: true
+:escape_html: false               # Brakeman will auto-detect Rails escaping
+
+# Performance / parsing
+:parser_timeout: 10
+:message_limit: 100
+
+# Output setup – tweak if you want reports written to files
+:output_files: []                 # e.g. ["tmp/brakeman.html", "tmp/brakeman.json"]
+:output_format:                   # let Brakeman choose (text in CI)
+
+# Paths display
+:relative_path: false
+:absolute_paths: false
+
+# GitHub links in HTML/markdown reports (optional)
+:github_repo:
+
+- name: Scan for common Rails security vulnerabilities using static analysis
+  run: |
+    set +e
+    bin/brakeman --no-pager
+    status=$?
+    # 0 = OK, 5 = “not latest Brakeman”
+    if [ "$status" != "0" ] && [ "$status" != "5" ]; then
+      exit $status
+    fi
+
