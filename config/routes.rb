@@ -12,7 +12,11 @@ Rails.application.routes.draw do
     delete "sign_out", to: "sessions#destroy_current"
     get "current_user", to: "current_user#show"
     get "rollbar", to: "rollbar#show"
+    get "payment_options", to: "payment_options#show"
     resources :sessions, only: [ :index, :show, :destroy ]
+    resources :payment_methods, only: [ :index, :show, :create ]
+    resources :payments, only: [ :index, :show, :create ]
+    resources :subscriptions, only: [ :index, :show, :create ]
     resource  :password, only: [ :edit, :update ]
 
     namespace :identity do
